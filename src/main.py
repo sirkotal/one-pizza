@@ -1,16 +1,30 @@
-# This is a sample Python script.
+from customer import Customer
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+def parse_input(input_file):
+    clients = []
+    ingredients = set()
 
+    with open(input_file, 'r') as file:
+        num_clients = int(file.readline())
+        for _ in range(num_clients):
+            line = file.readline().split()
+            num_liked = int(line[0])
+            assert num_liked == len(line[1:])
+            liked = set(line[1:])
+            ingredients.update(line[1:])
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+            line = file.readline().split()
+            num_disliked = int(line[0])
+            assert num_disliked == len(line[1:])
+            disliked = set(line[1:])
+            ingredients.update(line[1:])
+            clients.append(Customer(liked, disliked))
 
+    return clients, ingredients
 
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    clients, ingredients = parse_input('../input/a_an_example.in.txt')
+    # clients, ingredients = parse_input('../input/c_coarse.in.txt')
+    print(clients)
+    print(ingredients)
+    print(len(ingredients))
