@@ -14,7 +14,7 @@ def eval_function(pizza):
             pizza.score += 1
     return pizza.score
 
-def generate_neighbors(pizza): # steepest ascent, BFS -> TODO
+def generate_neighbors(pizza): # TODO
     neighbors = []
     
     return neighbors
