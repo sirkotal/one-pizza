@@ -1,5 +1,5 @@
 from customer import Customer
-import pizza
+from pizza import *
 
 import os
 
@@ -14,16 +14,16 @@ def parse_input(input_file):
             num_liked = int(line[0])
             assert num_liked == len(line[1:])
             liked = set(line[1:])
-            ingredients.update(line[1:])
+            ingredients.update(liked)
 
             line = file.readline().split()
             num_disliked = int(line[0])
             assert num_disliked == len(line[1:])
             disliked = set(line[1:])
-            ingredients.update(line[1:])
+            ingredients.update(disliked)
             clients.append(Customer(liked, disliked))
     
-    return pizza.Pizza(clients, ingredients)
+    return Pizza(clients, sorted(list(ingredients)))
 
 if __name__ == '__main__':
     piz = parse_input(os.path.join(os.path.dirname(__file__), '../input/a_an_example.in.txt'))
@@ -32,18 +32,19 @@ if __name__ == '__main__':
     # print(piz.ingredients)
     # print(len(piz.ingredients))
 
-    good = set()
-    bad = set()
+    # good = set()
+    # bad = set()
 
-    for client in piz.customers:
-        good.update(client.likes)
-        bad.update(client.dislikes)
+    # for client in piz.customers:
+    #     good.update(client.likes)
+    #     bad.update(client.dislikes)
     
-    good.difference_update(bad)
+    # good.difference_update(bad)
 
     # print(good)
     # print(bad)
 
-    piz.solution = {'peppers', 'cheese', 'mushrooms', 'pineapple', 'tomatoes', 'basil'}
-    print(pizza.hill_climbing(pizza.eval_function, piz).solution)
-    print(pizza.hill_climbing(pizza.eval_function, piz).score)
+    piz.solution = int('111111', 2)
+    result = hill_climbing(eval_function, piz)
+    print(result.get_solution())
+    print(result.score)
