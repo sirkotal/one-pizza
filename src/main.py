@@ -1,6 +1,8 @@
 from customer import Customer
 import pizza
 
+import os
+
 def parse_input(input_file):
     clients = []
     ingredients = set()
@@ -21,12 +23,10 @@ def parse_input(input_file):
             ingredients.update(line[1:])
             clients.append(Customer(liked, disliked))
     
-    p = pizza.Pizza(clients, ingredients)
-
-    return p
+    return pizza.Pizza(clients, ingredients)
 
 if __name__ == '__main__':
-    piz = parse_input('input/a_an_example.in.txt')
+    piz = parse_input(os.path.join(os.path.dirname(__file__), '../input/a_an_example.in.txt'))
     # clients, ingredients = parse_input('../input/c_coarse.in.txt')
     # print(piz.customers)
     # print(piz.ingredients)
