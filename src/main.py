@@ -1,5 +1,10 @@
 from customer import Customer
+from pizza import *
 
+import os
+
+# TODO: Make customer likes and dislikes a bitstring
+# would be easier to evaluate the solution
 def parse_input(input_file):
     clients = []
     ingredients = set()
@@ -11,20 +16,20 @@ def parse_input(input_file):
             num_liked = int(line[0])
             assert num_liked == len(line[1:])
             liked = set(line[1:])
-            ingredients.update(line[1:])
+            ingredients.update(liked)
 
             line = file.readline().split()
             num_disliked = int(line[0])
             assert num_disliked == len(line[1:])
             disliked = set(line[1:])
-            ingredients.update(line[1:])
+            ingredients.update(disliked)
             clients.append(Customer(liked, disliked))
-
-    return clients, ingredients
+    
+    return Pizza(clients, list(ingredients))
 
 if __name__ == '__main__':
-    clients, ingredients = parse_input('../input/a_an_example.in.txt')
-    # clients, ingredients = parse_input('../input/c_coarse.in.txt')
-    print(clients)
-    print(ingredients)
-    print(len(ingredients))
+    piz = parse_input(os.path.join(os.path.dirname(__file__), '../input/a_an_example.in.txt'))
+
+    result = hill_climbing(eval_function, piz)
+    print(result.get_solution())
+    print(result.score)
