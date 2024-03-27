@@ -15,7 +15,6 @@ class Pizza:
         TODO: Check if a list is more appropriate
         """
         return {self.ingredients[i] for i in range(len(self.ingredients)) if self.solution & utils.BIT(i)}
-        
 
 def eval_function(pizza): 
     """
@@ -52,23 +51,36 @@ def generate_neighbors(pizza):
     for i in range(len(pizza.ingredients)):
         neighbor = Pizza(pizza.customers, pizza.ingredients)
         neighbor.solution = utils.disable_bit(pizza.solution, i)
-        neighbors.add(neighbor)
-    
+        if neighbor.solution != pizza.solution:
+            neighbors.add(neighbor)
+
     return list(neighbors)
-    
+
 def hill_climbing(f, x0):
     """
     Hill climbing algorithm
+    Stop criteria: 1000 iterations without improvement
     f: evaluation function
     x0: initial solution
 
     Returns the best solution found
     """
     x = x0
+    best_eval = f(x)
 
-    while True:
+    # it = 0
+    no_improvement = 0
+    while no_improvement < 1000:
+        no_improvement += 1
         neighbors = generate_neighbors(x)       # generate current solution neighbors
         best_neighbor = max(neighbors, key=f)   # find neighbor with highest fitness value
-        if f(best_neighbor) <= f(x):            # if the best neighbor is not better than the current solution, stop
-            return x
-        x = best_neighbor                       # otherwise, continue with the best neighbor
+        # print(f"{it}: {x.get_solution()} -> {best_neighbor.get_solution()} ({best_neighbor.score})")
+        neighbor_eval = f(best_neighbor)
+        if neighbor_eval > best_eval:           # if the best neighbor is better than the current solution
+            no_improvement = 0
+            x = best_neighbor
+            best_eval = neighbor_eval
+            # print(f"New best solution: {x.get_solution()} ({x.score})")
+        # it += 1
+
+    return x # return the best solution found
