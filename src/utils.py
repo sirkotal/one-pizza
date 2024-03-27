@@ -5,9 +5,14 @@ def BIT(n):
     """
     return 1 << n
 
-def flip_bits(n):
+def enable_bit(n, i):
     """
-    Flips all bits of a number.
-    Ex: flip_bits(5) -> 2 [101 -> 010]
+    Returns the number n with the i-th bit enabled
     """
-    return n ^ int('1' * n.bit_length(), 2)
+    return n | BIT(i)
+
+def disable_bit(n, i):
+    """
+    Returns the number n with the i-th bit disabled
+    """
+    return n & (BIT(i) ^ int('1'*n.bit_length(), 2))
