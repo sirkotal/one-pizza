@@ -15,4 +15,4 @@ def disable_bit(n, i):
     """
     Returns the number n with the i-th bit disabled
     """
-    return n & (BIT(i) ^ int('1'*n.bit_length(), 2))
+    return 0 if n == 0 else n & (BIT(i) ^ int('1'*n.bit_length(), 2))
