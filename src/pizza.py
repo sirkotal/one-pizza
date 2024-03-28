@@ -113,3 +113,28 @@ def tournament_selection(pizzas, num_p):
                 best_score = participant.score
         parents.append(best_participant)
     return parents
+
+class GeneticAlgorithm:
+  def __init__(self, population_size, customers, ingredients, mutation_rate, selection_method="roulette", tournament_size=5):
+    self.population = Population(population_size, customers, ingredients)
+    self.mutation_rate = mutation_rate
+    self.selection_method = selection_method
+    self.tournament_size = tournament_size
+
+def genetic_algorithm(pizzas, num_generations, mutation_rate, selection_method="roulette", tournament_size=4):
+    # missing termination criteria -> individual fit enough?
+    for _ in range(num_generations):
+        for pizza in pizzas:
+            eval_function(pizza)
+
+        if selection_method == "roulette":
+            parents = roulette_wheel_selection(pizzas)
+        elif selection_method == "tournament":
+            parents = tournament_selection(pizzas, tournament_size)
+        else:
+            raise ValueError(f"Invalid selection method: {selection_method}")
+
+        children = crossover(parents)
+        mutate(children)
+
+        pizzas += children
