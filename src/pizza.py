@@ -131,17 +131,43 @@ def genetic_algorithm(pizzas, num_generations, mutation_rate, selection_method="
         mutate(children, mutation_rate)
 
         pizzas += children
-    return pizzas
+    pizzas.sort(reverse=True, key=eval_function)
+    return pizzas[0]
 
 def crossover(parents):
     a = parents[0]
     b = parents[1]
-    crossover_point = random.randint(1, min(len(a.solution), len(b.solution)) - 1)
+    crossover_point = random.randint(1, min(len(bin(a.solution)), len(bin(b.solution))) - 1)
 
     # a and b's customers/ingredients should be the same, they're both used for diversity's sake
     child_1 = Pizza(a.customers, a.ingredients)
     child_2 = Pizza(b.customers, b.ingredients)
 
-    child_1.solution = a.solution[:crossover_point] + b.solution[crossover_point:]
-    child_2.solution = b.solution[:crossover_point] + a.solution[crossover_point:]
+    child_1.solution = int(bin(a.solution)[:crossover_point] + bin(b.solution)[crossover_point:], 2)
+    child_2.solution = int(bin(b.solution)[:crossover_point] + bin(a.solution)[crossover_point:], 2)
     return [child_1, child_2]
+
+def mutate(children, mutation_rate):
+    for child in children:
+      for i in range(len(bin(child.solution))):
+        if random.random() < mutation_rate:
+          child.solution ^= utils.BIT(i)
+
+def get_neightbors(pizza):
+    neighbors = []
+
+    # add ingredient
+    for i in range(len(pizza.ingredients)):
+        neighbor = Pizza(pizza.customers, pizza.ingredients)
+        neighbor.solution = utils.enable_bit(pizza.solution, i)
+        if neighbor.solution != pizza.solution:
+            neighbors.append(neighbor)
+
+    # remove ingredient
+    for i in range(len(pizza.ingredients)):
+        neighbor = Pizza(pizza.customers, pizza.ingredients)
+        neighbor.solution = utils.disable_bit(pizza.solution, i)
+        if neighbor.solution != pizza.solution:
+            neighbors.append(neighbor)
+
+    return neighbors

@@ -34,5 +34,6 @@ if __name__ == '__main__':
     # print(result.get_solution())
     # print(result.score)
 
+    something = get_neightbors(piz)
     best_solution = genetic_algorithm(something, 100, 0.01, "roulette", 4)  
     print(f"Best solution found: {best_solution.get_solution()} ({best_solution.score})")
