@@ -114,13 +114,6 @@ def tournament_selection(pizzas, num_p):
         parents.append(best_participant)
     return parents
 
-class GeneticAlgorithm:
-  def __init__(self, population_size, customers, ingredients, mutation_rate, selection_method="roulette", tournament_size=5):
-    self.population = Population(population_size, customers, ingredients)
-    self.mutation_rate = mutation_rate
-    self.selection_method = selection_method
-    self.tournament_size = tournament_size
-
 def genetic_algorithm(pizzas, num_generations, mutation_rate, selection_method="roulette", tournament_size=4):
     # missing termination criteria -> individual fit enough?
     for _ in range(num_generations):
@@ -135,6 +128,19 @@ def genetic_algorithm(pizzas, num_generations, mutation_rate, selection_method="
             raise ValueError(f"Invalid selection method: {selection_method}")
 
         children = crossover(parents)
-        mutate(children)
+        mutate(children, mutation_rate)
 
         pizzas += children
+
+def crossover(parents):
+    a = parents[0]
+    b = parents[1]
+    crossover_point = random.randint(1, min(len(a.solution), len(b.solution)) - 1)
+
+    # a and b's customers/ingredients should be the same, they're both used for diversity's sake
+    child_1 = Pizza(a.customers, a.ingredients)
+    child_2 = Pizza(b.customers, b.ingredients)
+    
+    child_1.solution = a.solution[:crossover_point] + b.solution[crossover_point:]
+    child_2.solution = b.solution[:crossover_point] + a.solution[crossover_point:]
+    return [child_1, child_2]
