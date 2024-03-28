@@ -131,6 +131,7 @@ def genetic_algorithm(pizzas, num_generations, mutation_rate, selection_method="
         mutate(children, mutation_rate)
 
         pizzas += children
+    return pizzas
 
 def crossover(parents):
     a = parents[0]
@@ -140,7 +141,7 @@ def crossover(parents):
     # a and b's customers/ingredients should be the same, they're both used for diversity's sake
     child_1 = Pizza(a.customers, a.ingredients)
     child_2 = Pizza(b.customers, b.ingredients)
-    
+
     child_1.solution = a.solution[:crossover_point] + b.solution[crossover_point:]
     child_2.solution = b.solution[:crossover_point] + a.solution[crossover_point:]
     return [child_1, child_2]
