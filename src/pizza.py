@@ -94,3 +94,22 @@ def hill_climbing(f, x0):
         it += 1
 
     return x # return the best solution found
+
+def roulette_wheel_selection(pizzas):
+    total_fitness = sum(pizza.score for pizza in pizzas)
+    probabilities = [pizza.score / total_fitness for pizza in pizzas]
+    return random.choices(pizzas, weights=probabilities, k=2)
+
+def tournament_selection(pizzas, num_p):
+    parents = []
+    for _ in range(2):
+        best_participant = None
+        best_score = -1
+
+        for _ in range(num_p):
+            participant = random.choice(pizzas)
+            if participant.score > best_score:
+                best_participant = participant
+                best_score = participant.score
+        parents.append(best_participant)
+    return parents
