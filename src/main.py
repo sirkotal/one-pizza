@@ -34,6 +34,6 @@ if __name__ == '__main__':
     # print(result.get_solution())
     # print(result.score)
 
-    annealing = simulated_annealing(eval_function, piz, 1)
+    annealing = simulated_annealing(eval_function, piz)
     print(annealing.get_solution())
     print(annealing.score)

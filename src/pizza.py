@@ -78,22 +78,18 @@ def hill_climbing(f, x0):
 
     Returns the best solution found
     """
-    x = x0
-    best_eval = f(x)
+    x = x0 ; best_eval = f(x)
 
-    it = 1
-    no_improvement = 0
+    it = 0 ; no_improvement = 0
     while no_improvement < 1000:
-        no_improvement += 1
+        it += 1 ; no_improvement += 1
         best_neighbor = get_best_neighbor(x, f)    # find neighbor with highest fitness value
         print(f"{it}: {x.get_solution()} -> {best_neighbor.get_solution()} ({best_neighbor.score})")
         neighbor_eval = f(best_neighbor)
         if neighbor_eval > best_eval:               # if the best neighbor is better than the current solution
             no_improvement = 0
-            x = best_neighbor
-            best_eval = neighbor_eval
+            x = best_neighbor ; best_eval = neighbor_eval
             print(f"New best solution: {x.get_solution()} ({x.score})")
-        it += 1
 
     return x # return the best solution found
 
@@ -119,20 +115,25 @@ def get_random_neighbor(pizza, f):
 
     return random.choice(list(neighbors))
 
-def simulated_annealing(f, x0, temperature):
-    x = x0
-    curr_eval = f(x)
+def cooling_schedule(t):
+    return t * 0.999
+
+def simulated_annealing(f, x0, temperature=1000):
+    x = x0 ; curr_eval = f(x)
     # exclusion = set()
 
-    it = 1
-    while it <= 1000:
-        rand_neighbor = get_random_neighbor(x, f)    # needs to be random neighbor, check if it's working
+    it = 0 ; no_improvement = 0
+    while no_improvement < 1000:
+        it += 1 ; no_improvement += 1
+
+        temperature = cooling_schedule(temperature)
+        rand_neighbor = get_random_neighbor(x, f) ; neighbor_eval = f(rand_neighbor)
         print(f"{it}: {x.get_solution()} -> {rand_neighbor.get_solution()} ({rand_neighbor.score})")
-        neighbor_eval = f(rand_neighbor)
 
         if neighbor_eval > curr_eval:             
-            x = rand_neighbor
-            curr_eval = neighbor_eval
+            no_improvement = 0
+
+            x = rand_neighbor ; curr_eval = neighbor_eval
             print(f"New best solution: {x.get_solution()} ({x.score})")
         else:
             chance = math.exp(-(curr_eval - neighbor_eval) / temperature) * 100
@@ -141,12 +142,9 @@ def simulated_annealing(f, x0, temperature):
             print(f"{chance}, {prob}")
 
             if prob <= chance:
-                x = rand_neighbor
-                curr_eval = neighbor_eval
+                x = rand_neighbor ; curr_eval = neighbor_eval
                 print(f"New worse solution: {x.get_solution()} ({x.score})")
             else:
                 print(f"Skipped")
                 # exclusion.add(rand_neighbor)
-        it += 1
-
     return x 
