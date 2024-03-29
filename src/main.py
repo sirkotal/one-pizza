@@ -30,6 +30,10 @@ def parse_input(input_file):
 if __name__ == '__main__':
     piz = parse_input(os.path.join(os.path.dirname(__file__), '../input/a_an_example.in.txt'))
 
-    result = hill_climbing(eval_function, piz)
-    print(result.get_solution())
-    print(result.score)
+    # result = hill_climbing(eval_function, piz)
+    # print(result.get_solution())
+    # print(result.score)
+
+    annealing = simulated_annealing(eval_function, piz)
+    print(annealing.get_solution())
+    print(annealing.score)
