@@ -148,3 +148,80 @@ def simulated_annealing(f, x0, temperature=1000):
                 print(f"Skipped")
                 # exclusion.add(rand_neighbor)
     return x 
+
+def roulette_wheel_selection(pizzas):
+    total_fitness = sum(pizza.score for pizza in pizzas)
+    probabilities = [pizza.score / total_fitness for pizza in pizzas]
+    return random.choices(pizzas, weights=probabilities, k=2)
+
+def tournament_selection(pizzas, num_p):
+    parents = []
+    for _ in range(2):
+        best_participant = None
+        best_score = -1
+
+        for _ in range(num_p):
+            participant = random.choice(pizzas)
+            if participant.score > best_score:
+                best_participant = participant
+                best_score = participant.score
+        parents.append(best_participant)
+    return parents
+
+def genetic_algorithm(pizzas, num_generations, mutation_rate, selection_method="roulette", tournament_size=4):
+    # missing termination criteria -> individual fit enough?
+    for _ in range(num_generations):
+        for pizza in pizzas:
+            eval_function(pizza)
+
+        if selection_method == "roulette":
+            parents = roulette_wheel_selection(pizzas)
+        elif selection_method == "tournament":
+            parents = tournament_selection(pizzas, tournament_size)
+        else:
+            raise ValueError(f"Invalid selection method: {selection_method}")
+
+        children = crossover(parents)
+        mutate(children, mutation_rate)
+
+        pizzas += children
+    pizzas.sort(reverse=True, key=eval_function)
+    return pizzas[0]
+
+def crossover(parents):
+    a = parents[0]
+    b = parents[1]
+    crossover_point = random.randint(1, min(len(bin(a.solution)), len(bin(b.solution))) - 1)
+
+    # a and b's customers/ingredients should be the same, they're both used for diversity's sake
+    child_1 = Pizza(a.customers, a.ingredients)
+    child_2 = Pizza(b.customers, b.ingredients)
+
+    child_1.solution = int(bin(a.solution)[:crossover_point] + bin(b.solution)[crossover_point:], 2)
+    child_2.solution = int(bin(b.solution)[:crossover_point] + bin(a.solution)[crossover_point:], 2)
+    return [child_1, child_2]
+
+def mutate(children, mutation_rate):
+    for child in children:
+      for i in range(len(bin(child.solution))):
+        if random.random() < mutation_rate:
+          child.solution ^= utils.BIT(i)
+
+def get_neightbors(pizza):
+    neighbors = []
+
+    # add ingredient
+    for i in range(len(pizza.ingredients)):
+        neighbor = Pizza(pizza.customers, pizza.ingredients)
+        neighbor.solution = utils.enable_bit(pizza.solution, i)
+        if neighbor.solution != pizza.solution:
+            neighbors.append(neighbor)
+
+    # remove ingredient
+    for i in range(len(pizza.ingredients)):
+        neighbor = Pizza(pizza.customers, pizza.ingredients)
+        neighbor.solution = utils.disable_bit(pizza.solution, i)
+        if neighbor.solution != pizza.solution:
+            neighbors.append(neighbor)
+
+    return neighbors

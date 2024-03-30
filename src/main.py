@@ -30,10 +30,17 @@ def parse_input(input_file):
 if __name__ == '__main__':
     piz = parse_input(os.path.join(os.path.dirname(__file__), '../input/a_an_example.in.txt'))
 
+    # Hill Climbing Testing
     # result = hill_climbing(eval_function, piz)
     # print(result.get_solution())
     # print(result.score)
+    
+    # Simulated Annealing Testing
+    # annealing = simulated_annealing(eval_function, piz)
+    # print(annealing.get_solution())
+    # print(annealing.score)
 
-    annealing = simulated_annealing(eval_function, piz)
-    print(annealing.get_solution())
-    print(annealing.score)
+    # Genetic Algorithm Testing
+    something = get_neightbors(piz)
+    best_solution = genetic_algorithm(something, 100, 0.01, "roulette", 4)  
+    print(f"Best solution found: {best_solution.get_solution()} ({best_solution.score})")
