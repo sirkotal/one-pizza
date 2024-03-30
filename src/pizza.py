@@ -225,3 +225,59 @@ def get_neightbors(pizza):
             neighbors.append(neighbor)
 
     return neighbors
+
+def tabu_search(pizza, eval_function, max_iterations, tabu_size, neighborhood_size=10):
+    # first score
+    best_solution = pizza
+    best_score = eval_function(pizza)
+
+    # current score
+    current_solution = pizza
+    tabu_list = []
+
+    for _ in range(max_iterations):
+        neighbors = get_neighbors_tabu(current_solution, neighborhood_size)
+        best_neighbor = None
+        best_neighbor_score = -float('inf')
+
+        for neighbor in neighbors:
+            # not on tabu or better
+            if (neighbor.solution not in tabu_list) or (eval_function(neighbor) > best_score):
+                score = eval_function(neighbor)
+                if score > best_neighbor_score:
+                    best_neighbor = neighbor
+                    best_neighbor_score = score
+
+        if best_neighbor is None:
+            break
+
+        current_solution = best_neighbor
+
+        if best_neighbor_score > best_score:
+            best_solution = best_neighbor
+            best_score = best_neighbor_score
+
+        tabu_list.append(best_neighbor.solution)
+        if len(tabu_list) > tabu_size:
+            tabu_list.pop(0)
+
+    return best_solution
+
+def generate_neighbor(pizza):
+    new_solution = pizza.solution
+    ingredient_index = random.randint(0, len(pizza.ingredients) - 1)
+
+    # bit flip
+    new_solution ^= 1 << ingredient_index
+
+    # new pizza
+    new_pizza = Pizza(pizza.customers, pizza.ingredients)
+    new_pizza.solution = new_solution
+    return new_pizza
+
+def get_neighbors_tabu(pizza, neighborhood_size):
+    neighbors = []
+    for _ in range(neighborhood_size):
+        neighbor = generate_neighbor(pizza)
+        neighbors.append(neighbor)
+    return neighbors

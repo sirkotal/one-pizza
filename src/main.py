@@ -41,6 +41,12 @@ if __name__ == '__main__':
     # print(annealing.score)
 
     # Genetic Algorithm Testing
-    something = get_neightbors(piz)
-    best_solution = genetic_algorithm(something, 100, 0.01, "roulette", 4)  
-    print(f"Best solution found: {best_solution.get_solution()} ({best_solution.score})")
+    # something = get_neightbors(piz)
+    # best_solution = genetic_algorithm(something, 100, 0.01, "roulette", 4)  
+    # print(f"Best solution found: {best_solution.get_solution()} ({best_solution.score})")
+
+    # Tabu Search Testing
+    # tabu_result = tabu_search(piz, eval_function, 1000, 10)
+    # print("Tabu Search Result:")
+    # print(f"Ingredients: {tabu_result.get_solution()}")
+    # print(f"Score: {tabu_result.score}")
