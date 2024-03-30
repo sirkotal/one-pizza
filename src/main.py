@@ -3,8 +3,6 @@ from pizza import *
 
 import os
 
-# TODO: Make customer likes and dislikes a bitstring
-# would be easier to evaluate the solution
 def parse_input(input_file):
     clients = []
     ingredients = set()
