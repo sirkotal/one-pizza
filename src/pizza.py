@@ -35,6 +35,8 @@ class Pizza:
     def eval_solution(self, solution=None):
         """
         Default evaluation function for the pizza problem
+        If a solution is provided, it evaluates the given solution
+        Otherwise, it evaluates the current solution and updates the score
 
         Args:
             solution: Solution to be evaluated (default self.solution)
@@ -103,7 +105,7 @@ def get_best_neighbor(solution, ingredients, f):
 
     return random.choice(best_neighbors)
 
-def hill_climbing(pizza, max_iterations=1000):
+def hill_climbing(pizza, max_iterations=1000, log=False):
     """
     Hill climbing algorithm
     Stop criteria: `max_iterations` iterations without improvement
@@ -111,6 +113,7 @@ def hill_climbing(pizza, max_iterations=1000):
     Args:
         pizza: initial solution
         max_iterations: maximum number of iterations with no improvement (default 1000)
+        log: If True, prints the solution at each iteration
 
     Returns the best solution found
     """
@@ -122,13 +125,15 @@ def hill_climbing(pizza, max_iterations=1000):
 
         best_neighbor = get_best_neighbor(x, pizza.ingredients, pizza.eval_solution)
         neighbor_eval = pizza.eval_solution(best_neighbor)
-        print(f"{it}: {x} -> {best_neighbor} ({neighbor_eval})")
+        if log:
+            print(f"{it}: {x} -> {best_neighbor} ({neighbor_eval})")
 
         # if neighbor is better than current solution
         if neighbor_eval > best_eval:
             no_improvement = 0
             x = best_neighbor ; best_eval = neighbor_eval
-            print(f"New best solution: {x} ({best_eval})")
+            if log:
+                print(f"New best solution: {x} ({best_eval})")
 
     pizza.solution = x
     pizza.score = best_eval
@@ -144,7 +149,7 @@ def cooling_schedule(t):
     """
     return t * 0.999
 
-def simulated_annealing(pizza, temperature=1000, max_iterations=1000):
+def simulated_annealing(pizza, temperature=1000, max_iterations=1000, log=False):
     """
     Simulated annealing algorithm
     The stop criteria is `max_iterations` - iterations without improvement
@@ -153,6 +158,7 @@ def simulated_annealing(pizza, temperature=1000, max_iterations=1000):
         pizza: initial solution
         temperature: initial temperature (default 1000)
         max_iterations: maximum number of iterations with no improvement (default 1000)
+        log: If True, prints the solution at each iteration
 
     Returns the best solution found
     """
@@ -164,22 +170,26 @@ def simulated_annealing(pizza, temperature=1000, max_iterations=1000):
 
         temperature = cooling_schedule(temperature)
         rand_neighbor = random.choice(get_neighbors(x, pizza.ingredients)) ; neighbor_eval = pizza.eval_solution(rand_neighbor)
-        print(f"{it}: {x} -> {rand_neighbor} ({neighbor_eval})")
+        if log:
+            print(f"{it}: {x} -> {rand_neighbor} ({neighbor_eval})")
 
         if neighbor_eval > curr_eval:             
             no_improvement = 0
 
             x = rand_neighbor ; curr_eval = neighbor_eval
-            print(f"New best solution: {x} ({curr_eval})")
+            if log:
+                print(f"New best solution: {x} ({curr_eval})")
         else:
             chance = math.exp(-(curr_eval - neighbor_eval) / temperature) * 100
             prob = random.randint(1, 100)
 
-            print(f"{chance}, {prob}")
+            if log:
+                print(f"{chance}, {prob}")
 
             if prob <= chance:
                 x = rand_neighbor ; curr_eval = neighbor_eval
-                print(f"New worse solution: {x} ({curr_eval})")
+                if log:
+                    print(f"New worse solution: {x} ({curr_eval})")
 
     pizza.solution = x
     pizza.score = curr_eval
@@ -224,7 +234,7 @@ def tournament_selection(solutions, scores, num_p):
         parents.append(solutions[best_participant])
     return parents
 
-def genetic_algorithm(pizza, num_generations=100, mutation_rate=0.01, selection_method="roulette", tournament_size=4):
+def genetic_algorithm(pizza, num_generations=100, mutation_rate=0.01, selection_method="roulette", tournament_size=4, log=False):
     """
     Genetic algorithm for the pizza problem
     
@@ -236,6 +246,7 @@ def genetic_algorithm(pizza, num_generations=100, mutation_rate=0.01, selection_
             - roulette: Roulette wheel selection
             - tournament: Tournament selection
         tournament_size: Tournament size (default 4)
+        log: If True, prints the solution at each iteration
 
     Returns the best solution found
     """
@@ -245,15 +256,21 @@ def genetic_algorithm(pizza, num_generations=100, mutation_rate=0.01, selection_
     solutions = get_neighbors(pizza.solution, pizza.ingredients)
 
     # missing termination criteria -> individual fit enough?
-    for _ in range(num_generations):
+    for gen in range(num_generations):
         scores = [pizza.eval_solution(solution) for solution in solutions]
         if selection_method == "roulette":
             parents = roulette_wheel_selection(solutions, scores)
         else:
             parents = tournament_selection(solutions, scores, tournament_size)
 
+        if log:
+            print(f"Generation {gen + 1} -> Parents: {parents}")
+
         children = crossover(parents)
         mutate(children, mutation_rate)
+
+        if log:
+            print(f"Generation {gen + 1} -> New children: {children}")
 
         solutions += children
 
@@ -294,7 +311,7 @@ def mutate(children, mutation_rate):
         if random.random() < mutation_rate:
           child ^= utils.BIT(i)
 
-def tabu_search(pizza, max_iterations=1000, tabu_size=10, neighborhood_size=10):
+def tabu_search(pizza, max_iterations=1000, tabu_size=10, neighborhood_size=10, log=False):
     """
     Tabu search algorithm for the pizza problem
 
@@ -303,6 +320,7 @@ def tabu_search(pizza, max_iterations=1000, tabu_size=10, neighborhood_size=10):
         max_iterations: Maximum number of iterations (default 1000)
         tabu_size: Tabu list size (default 10)
         neighborhood_size: Size of the neighborhood (default 10)
+        log: If True, prints the solution at each iteration
 
     Returns the best solution found
     """
@@ -333,6 +351,9 @@ def tabu_search(pizza, max_iterations=1000, tabu_size=10, neighborhood_size=10):
         if best_neighbor_score > best_score:
             best_solution = best_neighbor
             best_score = best_neighbor_score
+
+            if log:
+                print(f"New best solution: {best_solution} ({best_score})")
 
         tabu_list.append(best_neighbor)
         if len(tabu_list) > tabu_size:

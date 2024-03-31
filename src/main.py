@@ -34,15 +34,15 @@ def parse_input(input_file):
     return Pizza(clients, list(ingredients))
 
 if __name__ == '__main__':
-    pizza = parse_input(os.path.join(os.path.dirname(__file__), '../input/a_an_example.in.txt'))
+    # pizza = parse_input(os.path.join(os.path.dirname(__file__), '../input/a_an_example.in.txt'))
     # pizza = parse_input(os.path.join(os.path.dirname(__file__), '../input/b_basic.in.txt'))
-    # pizza = parse_input(os.path.join(os.path.dirname(__file__), '../input/c_coarse.in.txt'))
+    pizza = parse_input(os.path.join(os.path.dirname(__file__), '../input/c_coarse.in.txt'))
 
     # Hill Climbing Testing
     # hill_climbing(pizza)
     # print(pizza.get_solution())
     # print(pizza.score)
-    
+
     # Simulated Annealing Testing
     # simulated_annealing(pizza)
     # print(pizza.get_solution())
@@ -53,7 +53,7 @@ if __name__ == '__main__':
     # print(f"Best solution found: {pizza.get_solution()} ({pizza.score})")
 
     # Tabu Search Testing
-    tabu_search(pizza)
-    print("Tabu Search Result:")
-    print(f"Ingredients: {pizza.get_solution()}")
-    print(f"Score: {pizza.score}")
+    # tabu_search(pizza)
+    # print("Tabu Search Result:")
+    # print(f"Ingredients: {pizza.get_solution()}")
+    # print(f"Score: {pizza.score}")
