@@ -29,22 +29,21 @@ if __name__ == '__main__':
     piz = parse_input(os.path.join(os.path.dirname(__file__), '../input/a_an_example.in.txt'))
 
     # Hill Climbing Testing
-    # result = hill_climbing(eval_function, piz)
+    # result = hill_climbing(piz)
     # print(result.get_solution())
     # print(result.score)
     
     # Simulated Annealing Testing
-    # annealing = simulated_annealing(eval_function, piz)
+    # annealing = simulated_annealing(piz)
     # print(annealing.get_solution())
     # print(annealing.score)
 
     # Genetic Algorithm Testing
-    # something = get_neightbors(piz)
-    # best_solution = genetic_algorithm(something, 100, 0.01, "roulette", 4)  
+    # best_solution = genetic_algorithm(piz)
     # print(f"Best solution found: {best_solution.get_solution()} ({best_solution.score})")
 
     # Tabu Search Testing
-    # tabu_result = tabu_search(piz, eval_function, 1000, 10)
+    # tabu_result = tabu_search(piz)
     # print("Tabu Search Result:")
     # print(f"Ingredients: {tabu_result.get_solution()}")
     # print(f"Score: {tabu_result.score}")
