@@ -4,6 +4,14 @@ from pizza import *
 import os
 
 def parse_input(input_file):
+    """
+    Parses the contents of a specific file
+
+    Args:
+        input_file: The file to be parsed
+        
+    Returns a Pizza object containing two lists: one for clients and another for ingredients
+    """
     clients = []
     ingredients = set()
 
