@@ -28,7 +28,7 @@ def parse_input(input_file):
     return Pizza(clients, list(ingredients))
 
 def display_menu():
-    print("------------- OnePizza -------------")
+    print("---------------------------- OnePizza ----------------------------")
     print("")
     print("Welcome to OnePizza!")
     print("")
@@ -62,6 +62,10 @@ def choose_input_file():
         '4': 'd_difficult.in.txt',
         '5': 'e_elaborate.in.txt',
     }
+
+    chosen_file = files.get(file_choice, 'a_an_example.in.txt') # by default
+    return os.path.join(os.path.dirname(__file__), f'../input/{chosen_file}')
+
 
 def main():
 
