@@ -15,4 +15,4 @@ python main.py
 
 When the program is running, you will be presented with a menu.
 
-From the menu, you can choose what algorithm you want to run and what file you want to utilize as input.
+From this menu, you can choose what algorithm you want to run, what file you want to utilize as input and even if you want logs for the specific option to be displayed.
