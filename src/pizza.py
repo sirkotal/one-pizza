@@ -149,7 +149,7 @@ def cooling_schedule(t):
     """
     return t * 0.999
 
-def simulated_annealing(pizza, temperature=1000, max_iterations=1000, log=False):
+def simulated_annealing(pizza, temperature=1000.0, max_iterations=1000, log=False):
     """
     Simulated annealing algorithm
     The stop criteria is `max_iterations` - iterations without improvement

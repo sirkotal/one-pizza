@@ -33,7 +33,7 @@ def parse_input(input_file):
     
     return Pizza(clients, list(ingredients))
 
-def display_menu():
+def display_menu(log):
     print("---------------------------- OnePizza ----------------------------")
     print("")
     print("Welcome to OnePizza!")
@@ -47,9 +47,15 @@ def display_menu():
     print("")
     print("5. Learn more about OnePizza")
     print("")
-    print("6. Exit")
+    print("6. Enable logging" if not log else "6. Disable logging")
     print("")
-    choice = input("Enter your choice (1-6): ")
+    print("7. Exit")
+    print("")
+
+    choice = input("Enter your choice (1-7): ")
+    if choice not in ['1', '2', '3', '4', '5', '6', '7']:
+        raise ValueError("Invalid choice")
+
     return choice
 
 def choose_input_file():
@@ -72,37 +78,93 @@ def choose_input_file():
     chosen_file = files.get(file_choice, 'a_an_example.in.txt') # by default
     return os.path.join(os.path.dirname(__file__), f'../input/{chosen_file}')
 
+def get_max_iterations():
+    print("Please enter the maximum number of iterations (default -> 1000): ", end="")
+    choice = input()
+    print()
+    return int(choice) if choice else 1000
+
+def get_initial_temperature():
+    print("Please enter the initial temperature (default -> 1000): ", end="")
+    choice = input()
+    print()
+    return float(choice) if choice else 1000.0
+
+def get_num_generations():
+    print("Please enter the number of generations (default -> 100): ", end="")
+    choice = input()
+    print()
+    return int(choice) if choice else 100
+
+def get_mutation_rate():
+    print("Please enter the mutation rate (default -> 0.1): ", end="")
+    choice = input()
+    print()
+    return float(choice) if choice else 0.01
+
+def get_selection_method():
+    print("Available selection methods: tournament, roulette")
+    print("Please enter the selection method (default -> roulette): ", end="")
+
+    choice = input()
+    if choice not in ['tournament', 'roulette', '']:
+        raise ValueError("Invalid selection method")
+
+    print()
+    return choice if choice else 'roulette'
+
+def get_tournament_size():
+    print("Please enter the tournament size (default -> 4): ", end="")
+    choice = input()
+    print()
+    return int(choice) if choice else 4
+
+def get_tabu_size():
+    print("Please enter the tabu list size (default -> 10): ", end="")
+    choice = input()
+    print()
+    return int(choice) if choice else 10
+
+def get_neighborhood_size():
+    print("Please enter the neighborhood size (default -> 10): ", end="")
+    choice = input()
+    print()
+    return int(choice) if choice else 10
 
 def main():
+    log = False
 
     while True:
-        user_choice = display_menu()
+        user_choice = display_menu(log)
         print("")
-        if user_choice == '1':
-            # Hill Climbing
+        if user_choice == '1': # Hill Climbing
             input_file_path = choose_input_file()
-            piz = parse_input(input_file_path)
-            result = hill_climbing(eval_function, piz)
-            print(f"Ingredients: {result.get_solution()}\nScore: {result.score}")
-        elif user_choice == '2':
-            # Simulated Annealing
+            pizza = parse_input(input_file_path)
+            hill_climbing(pizza, max_iterations=get_max_iterations(), log=log)
+            print(f"Ingredients: {pizza.get_solution()}\nScore: {pizza.score}")
+        elif user_choice == '2': # Simulated Annealing
             input_file_path = choose_input_file()
-            piz = parse_input(input_file_path)
-            annealing = simulated_annealing(eval_function, piz)
-            print(f"Ingredients: {annealing.get_solution()}\nScore: {annealing.score}")
-        elif user_choice == '3':
-            # Genetic Algorithm
+            pizza = parse_input(input_file_path)
+            simulated_annealing(pizza, max_iterations=get_max_iterations(), temperature=get_initial_temperature(), log=log)
+            print(f"Ingredients: {pizza.get_solution()}\nScore: {pizza.score}")
+        elif user_choice == '3': # Genetic Algorithm
             input_file_path = choose_input_file()
-            piz = parse_input(input_file_path)
-            neighbors = get_neightbors(piz)
-            best_solution = genetic_algorithm(neighbors, 100, 0.01, "roulette", 4)
-            print(f"Best solution found: {best_solution.get_solution()} ({best_solution.score})")
-        elif user_choice == '4':
-            # Tabu Search
+            pizza = parse_input(input_file_path)
+
+            num_generations = get_num_generations()
+            mutation_rate = get_mutation_rate()
+            selection_method = get_selection_method()
+            tournament_size = 4
+            if selection_method == 'tournament':
+                tournament_size = get_tournament_size()
+
+            genetic_algorithm(pizza, num_generations=num_generations, mutation_rate=mutation_rate, selection_method=selection_method, tournament_size=tournament_size, log=log)
+            print(f"Ingredients: {pizza.get_solution()}\nScore: {pizza.score}")
+        elif user_choice == '4': # Tabu Search
             input_file_path = choose_input_file()
-            piz = parse_input(input_file_path)
-            tabu_result = tabu_search(piz, eval_function, 1000, 10)
-            print(f"Ingredients: {tabu_result.get_solution()}\nScore: {tabu_result.score}")
+            pizza = parse_input(input_file_path)
+            tabu_search(pizza, max_iterations=get_max_iterations(), tabu_size=get_tabu_size(), neighborhood_size=get_neighborhood_size(), log=log)
+            print(f"Ingredients: {pizza.get_solution()}\nScore: {pizza.score}")
         elif user_choice == '5':
             # OnePizza explanation
             print("")
@@ -117,6 +179,11 @@ def main():
             print("")
             print("------------------------------------------------------------------------------------------------------------")
         elif user_choice == '6':
+            log = not log
+            # Clear the console
+            os.system('cls' if os.name == 'nt' else 'clear')
+            continue
+        elif user_choice == '7':
             print("Exiting program.")
             break
         else:
@@ -125,6 +192,7 @@ def main():
 
         print("")
         input("Press any key to return...")
+        os.system('cls' if os.name == 'nt' else 'clear')
 
 if __name__ == '__main__':
     main()
