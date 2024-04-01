@@ -61,11 +61,11 @@ def display_menu(log):
 
 def choose_input_file():
     print("Please select the input file:")
-    print("1. a_an_example.in.txt (Simplest)")
-    print("2. b_basic.in.txt")
-    print("3. c_coarse.in.txt")
-    print("4. d_difficult.in.txt")
-    print("5. e_elaborate.in.txt (Most Complex)")
+    print("1. Example (Simplest)")
+    print("2. Basic")
+    print("3. Coarse")
+    print("4. Difficult")
+    print("5. Elaborate (Most Complex)")
     file_choice = input("Enter your choice (1-5): ")
 
     files = {
