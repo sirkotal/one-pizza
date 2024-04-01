@@ -184,7 +184,7 @@ def simulated_annealing(pizza, temperature=1000.0, max_iterations=1000, log=Fals
             prob = random.randint(1, 100)
 
             if log:
-                print(f"{chance}, {prob}")
+                print(f"Chance of accepting a worse solution (equal or lower evaluation): {chance}")
 
             if prob <= chance:
                 x = rand_neighbor ; curr_eval = neighbor_eval
