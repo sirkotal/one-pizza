@@ -126,14 +126,14 @@ def hill_climbing(pizza, max_iterations=1000, log=False):
         best_neighbor = get_best_neighbor(x, pizza.ingredients, pizza.eval_solution)
         neighbor_eval = pizza.eval_solution(best_neighbor)
         if log:
-            print(f"{it}: {x} -> {best_neighbor} ({neighbor_eval})")
+            print(f"{it}: {bin(x)} -> {bin(best_neighbor)} ({neighbor_eval})")
 
         # if neighbor is better than current solution
         if neighbor_eval > best_eval:
             no_improvement = 0
             x = best_neighbor ; best_eval = neighbor_eval
             if log:
-                print(f"New best solution: {x} ({best_eval})")
+                print(f"New best solution: {bin(x)} ({best_eval})")
 
     pizza.solution = x
     pizza.score = best_eval
@@ -171,14 +171,14 @@ def simulated_annealing(pizza, temperature=1000, max_iterations=1000, log=False)
         temperature = cooling_schedule(temperature)
         rand_neighbor = random.choice(get_neighbors(x, pizza.ingredients)) ; neighbor_eval = pizza.eval_solution(rand_neighbor)
         if log:
-            print(f"{it}: {x} -> {rand_neighbor} ({neighbor_eval})")
+            print(f"{it}: {bin(x)} -> {bin(rand_neighbor)} ({neighbor_eval})")
 
         if neighbor_eval > curr_eval:             
             no_improvement = 0
 
             x = rand_neighbor ; curr_eval = neighbor_eval
             if log:
-                print(f"New best solution: {x} ({curr_eval})")
+                print(f"New best solution: {bin(x)} ({curr_eval})")
         else:
             chance = math.exp(-(curr_eval - neighbor_eval) / temperature) * 100
             prob = random.randint(1, 100)
@@ -189,7 +189,7 @@ def simulated_annealing(pizza, temperature=1000, max_iterations=1000, log=False)
             if prob <= chance:
                 x = rand_neighbor ; curr_eval = neighbor_eval
                 if log:
-                    print(f"New worse solution: {x} ({curr_eval})")
+                    print(f"New worse solution: {bin(x)} ({curr_eval})")
 
     pizza.solution = x
     pizza.score = curr_eval
@@ -264,13 +264,13 @@ def genetic_algorithm(pizza, num_generations=100, mutation_rate=0.01, selection_
             parents = tournament_selection(solutions, scores, tournament_size)
 
         if log:
-            print(f"Generation {gen + 1} -> Parents: {parents}")
+            print(f"Generation {gen + 1} -> Parents: {[bin(parent) for parent in parents]}")
 
         children = crossover(parents)
         mutate(children, mutation_rate)
 
         if log:
-            print(f"Generation {gen + 1} -> New children: {children}")
+            print(f"Generation {gen + 1} -> New children: {[bin(child) for child in children]}")
 
         solutions += children
 
@@ -353,7 +353,7 @@ def tabu_search(pizza, max_iterations=1000, tabu_size=10, neighborhood_size=10, 
             best_score = best_neighbor_score
 
             if log:
-                print(f"New best solution: {best_solution} ({best_score})")
+                print(f"New best solution: {bin(best_solution)} ({best_score})")
 
         tabu_list.append(best_neighbor)
         if len(tabu_list) > tabu_size:
