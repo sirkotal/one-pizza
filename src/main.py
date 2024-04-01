@@ -2,6 +2,7 @@ from customer import Customer
 from pizza import *
 
 import os
+import time
 
 def parse_input(input_file):
     """
@@ -140,13 +141,26 @@ def main():
         if user_choice == '1': # Hill Climbing
             input_file_path = choose_input_file()
             pizza = parse_input(input_file_path)
-            hill_climbing(pizza, max_iterations=get_max_iterations(), log=log)
+
+            max_iterations = get_max_iterations()
+
+            start_time = time.time()
+            hill_climbing(pizza, max_iterations=max_iterations, log=log)
+            end_time = time.time()
             print(f"Ingredients: {pizza.get_solution()}\nScore: {pizza.score}")
+            print(f"Time taken: {end_time - start_time:.3f} seconds")
         elif user_choice == '2': # Simulated Annealing
             input_file_path = choose_input_file()
             pizza = parse_input(input_file_path)
-            simulated_annealing(pizza, max_iterations=get_max_iterations(), temperature=get_initial_temperature(), log=log)
+
+            max_iterations = get_max_iterations()
+            initial_temperature = get_initial_temperature()
+
+            start_time = time.time()
+            simulated_annealing(pizza, max_iterations=max_iterations, temperature=initial_temperature, log=log)
+            end_time = time.time()
             print(f"Ingredients: {pizza.get_solution()}\nScore: {pizza.score}")
+            print(f"Time taken: {end_time - start_time:.3f} seconds")
         elif user_choice == '3': # Genetic Algorithm
             input_file_path = choose_input_file()
             pizza = parse_input(input_file_path)
@@ -158,13 +172,24 @@ def main():
             if selection_method == 'tournament':
                 tournament_size = get_tournament_size()
 
+            start_time = time.time()
             genetic_algorithm(pizza, num_generations=num_generations, mutation_rate=mutation_rate, selection_method=selection_method, tournament_size=tournament_size, log=log)
+            end_time = time.time()
             print(f"Ingredients: {pizza.get_solution()}\nScore: {pizza.score}")
+            print(f"Time taken: {end_time - start_time:.3f} seconds")
         elif user_choice == '4': # Tabu Search
             input_file_path = choose_input_file()
             pizza = parse_input(input_file_path)
-            tabu_search(pizza, max_iterations=get_max_iterations(), tabu_size=get_tabu_size(), neighborhood_size=get_neighborhood_size(), log=log)
+
+            max_iterations = get_max_iterations()
+            tabu_size = get_tabu_size()
+            neighborhood_size = get_neighborhood_size()
+
+            start_time = time.time()
+            tabu_search(pizza, max_iterations=max_iterations, tabu_size=tabu_size, neighborhood_size=neighborhood_size, log=log)
+            end_time = time.time()
             print(f"Ingredients: {pizza.get_solution()}\nScore: {pizza.score}")
+            print(f"Time taken: {end_time - start_time:.3f} seconds")
         elif user_choice == '5':
             # OnePizza explanation
             print("")
