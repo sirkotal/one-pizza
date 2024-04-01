@@ -46,27 +46,51 @@ def display_menu():
     choice = input("Enter your choice (1-6): ")
     return choice
 
+def choose_input_file():
+    print("Please select the input file:")
+    print("1. a_an_example.in.txt (Simplest)")
+    print("2. b_basic.in.txt")
+    print("3. c_coarse.in.txt")
+    print("4. d_difficult.in.txt")
+    print("5. e_elaborate.in.txt (Most Complex)")
+    file_choice = input("Enter your choice (1-5): ")
+
+    files = {
+        '1': 'a_an_example.in.txt',
+        '2': 'b_basic.in.txt',
+        '3': 'c_coarse.in.txt',
+        '4': 'd_difficult.in.txt',
+        '5': 'e_elaborate.in.txt',
+    }
+
 def main():
-    piz = parse_input(os.path.join(os.path.dirname(__file__), '../input/a_an_example.in.txt'))
 
     while True:
         user_choice = display_menu()
         print("")
         if user_choice == '1':
             # Hill Climbing
+            input_file_path = choose_input_file()
+            piz = parse_input(input_file_path)
             result = hill_climbing(eval_function, piz)
             print(f"Ingredients: {result.get_solution()}\nScore: {result.score}")
         elif user_choice == '2':
             # Simulated Annealing
+            input_file_path = choose_input_file()
+            piz = parse_input(input_file_path)
             annealing = simulated_annealing(eval_function, piz)
             print(f"Ingredients: {annealing.get_solution()}\nScore: {annealing.score}")
         elif user_choice == '3':
             # Genetic Algorithm
+            input_file_path = choose_input_file()
+            piz = parse_input(input_file_path)
             neighbors = get_neightbors(piz)
             best_solution = genetic_algorithm(neighbors, 100, 0.01, "roulette", 4)
             print(f"Best solution found: {best_solution.get_solution()} ({best_solution.score})")
         elif user_choice == '4':
             # Tabu Search
+            input_file_path = choose_input_file()
+            piz = parse_input(input_file_path)
             tabu_result = tabu_search(piz, eval_function, 1000, 10)
             print(f"Ingredients: {tabu_result.get_solution()}\nScore: {tabu_result.score}")
         elif user_choice == '5':
